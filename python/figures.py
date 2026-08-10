@@ -45,8 +45,10 @@ from matplotlib.patches import Patch
 # Paths
 # --------------------------------------------------------------------------
 
-DATA_DIR = Path(r"C:\Users\Salim\Desktop\makaleler\buse fidan turkon stabilizator")
-OUT_DIR = DATA_DIR / "figures"
+# Resolved relative to this file, so the script runs from anywhere in the repo.
+ROOT     = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "data" / "derived"
+OUT_DIR  = ROOT / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 DPI = 300
