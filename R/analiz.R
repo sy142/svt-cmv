@@ -9,7 +9,15 @@ rm(list = ls())
 options(width = 340, scipen = 999, stringsAsFactors = FALSE)
 set.seed(9186)
 
-kok <- "C:/Users/Salim/Desktop/makaleler/buse fidan turkon stabilizator/"
+## ---- Paths ---------------------------------------------------------------
+## Run this script with the repository root as the working directory.
+## kok     : derived tables that ship with the repository (data/derived/).
+## ham_kok : participant-level source files (analizlik.xlsx, "ham veriler.csv").
+##           These are NOT distributed with the repository. Point SVT_RAW_DIR
+##           at the folder that holds them, or edit the default below.
+kok     <- "data/derived/"
+ham_kok <- Sys.getenv("SVT_RAW_DIR", unset = "raw-data/")
+if (!dir.exists(kok)) dir.create(kok, recursive = TRUE)
 
 cizgi <- function(b) cat("\n", strrep("=", 130), "\n", b, "\n", strrep("=", 130), "\n", sep = "")
 
@@ -27,10 +35,10 @@ stopifnot(asciile("\u015Eehir \u0130stanbul y\u0131l\u0131") == "Sehir Istanbul 
 
 cizgi("BOLUM 1: VERI YUKLEME VE MADDE DUZEYI YENIDEN URETIM")
 
-d <- as.data.frame(read_xlsx(paste0(kok, "analizlik.xlsx")))
+d <- as.data.frame(read_xlsx(paste0(ham_kok, "analizlik.xlsx")))
 cat("analizlik.xlsx :", nrow(d), "x", ncol(d), "  eksik:", sum(is.na(d)), "\n")
 
-sat <- asciile(readLines(paste0(kok, "ham veriler.csv"), warn = FALSE, encoding = "UTF-8"))
+sat <- asciile(readLines(paste0(ham_kok, "ham veriler.csv"), warn = FALSE, encoding = "UTF-8"))
 gec <- file.path(tempdir(), "hv.csv")
 writeLines(sat, gec, useBytes = TRUE)
 n_alan <- max(count.fields(gec, sep = ",", quote = "\""))
@@ -500,7 +508,8 @@ print(sessionInfo()$otherPkgs$lavaan$Version)
 
 
 
-kok <- "C:/Users/Salim/Desktop/makaleler/buse fidan turkon stabilizator/"
+kok     <- "data/derived/"
+ham_kok <- Sys.getenv("SVT_RAW_DIR", unset = "raw-data/")
 TUM <- read.csv(paste0(kok, "svt_uclu_sonuclari.csv"), stringsAsFactors = FALSE)
 MOD <- read.csv(paste0(kok, "svt_moderator_duzeyi.csv"), stringsAsFactors = FALSE)
 anah <- function(df) paste(df$etiket, df$X, df$Y, df$Z, sep = "|")
@@ -675,7 +684,8 @@ cat("r(X,Y) rho0:", round(cor(v0$X, v0$Y), 2), " rho.8:", round(cor(v8$X, v8$Y),
 
 
 set.seed(9186)
-kok <- "C:/Users/Salim/Desktop/makaleler/buse fidan turkon stabilizator/"
+kok     <- "data/derived/"
+ham_kok <- Sys.getenv("SVT_RAW_DIR", unset = "raw-data/")
 
 mc_gruplar <- function(n, bag = 1) {
   u <- rnorm(n)
@@ -1284,7 +1294,8 @@ print(PROF, row.names = FALSE, right = FALSE)
 cat("\nasama bazinda ihlal sayisi:\n")
 print(table(unlist(strsplit(PROF$ihlal_asamalari[PROF$ihlal_asamalari != "yok"], "\\+"))))
 
-kok <- "C:/Users/Salim/Desktop/makaleler/buse fidan turkon stabilizator/"
+kok     <- "data/derived/"
+ham_kok <- Sys.getenv("SVT_RAW_DIR", unset = "raw-data/")
 ad <- c(uclu = "svt_uclu_sonuclari.csv", moderator = "svt_moderator_duzeyi.csv",
         mi_profil = "mi_asama_profili.csv", fazA_ozet = "mc_fazA_ozet.csv",
         fazA_ham = "mc_fazA_ham.csv", fazB = "mc_fazB.csv", fazB2 = "mc_fazB2.csv",
@@ -1722,8 +1733,11 @@ D3r <- do.call(rbind, lapply(konf, function(p) {
 write.csv(D3r, paste0(kok, "mc_fazD3_uneq_v2.csv"), row.names = FALSE)
 
 
-kok <- "C:/Users/Salim/Desktop/makaleler/buse fidan turkon stabilizator/"
-hedef <- paste0(kok, "svt_cmv_arsiv.rds")
+kok     <- "data/derived/"
+ham_kok <- Sys.getenv("SVT_RAW_DIR", unset = "raw-data/")
+## NOTE: this archive embeds participant-level objects and must never be
+## committed to the public repository; it is written outside the repo tree.
+hedef <- paste0(ham_kok, "svt_cmv_arsiv.rds")
 
 oku <- function(f) { yol <- paste0(kok, f); if (file.exists(yol)) read.csv(yol, stringsAsFactors = FALSE) else NULL }
 ad <- c(uclu = "svt_uclu_sonuclari.csv", moderator = "svt_moderator_duzeyi.csv",
